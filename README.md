@@ -1,39 +1,18 @@
-### Documentation is included in the Documentation folder ###
+This repository contains a UiPath automation workflow for interacting with the ACME System 1 web application. The automation follows a series of steps to log in, access the dashboard, retrieve work items, process specific tasks of WI5 type, generate security hashes, and update their status.
 
+## Overview
 
-### REFrameWork Template ###
-**Robotic Enterprise Framework**
+RPA built on REFramework - uses an orchestrator queue to upload queue items.
 
-* Built on top of *Transactional Business Process* template
-* Uses *State Machine* layout for the phases of automation project
-* Offers high level logging, exception handling and recovery
-* Keeps external settings in *Config.xlsx* file and Orchestrator assets
-* Pulls credentials from Orchestrator assets and *Windows Credential Manager*
-* Gets transaction data from Orchestrator queue and updates back status
-* Takes screenshots in case of system exceptions
+The automation workflow performs the following steps:
 
-
-### How It Works ###
-
-1. **INITIALIZE PROCESS**
- + ./Framework/*InitiAllSettings* - Load configuration data from Config.xlsx file and from assets
- + ./Framework/*GetAppCredential* - Retrieve credentials from Orchestrator assets or local Windows Credential Manager
- + ./Framework/*InitiAllApplications* - Open and login to applications used throughout the process
-
-2. **GET TRANSACTION DATA**
- + ./Framework/*GetTransactionData* - Fetches transactions from an Orchestrator queue defined by Config("OrchestratorQueueName") or any other configured data source
-
-3. **PROCESS TRANSACTION**
- + *Process* - Process trasaction and invoke other workflows related to the process being automated 
- + ./Framework/*SetTransactionStatus* - Updates the status of the processed transaction (Orchestrator transactions by default): Success, Business Rule Exception or System Exception
-
-4. **END PROCESS**
- + ./Framework/*CloseAllApplications* - Logs out and closes applications used throughout the process
-
-
-### For New Project ###
-
-1. Check the Config.xlsx file and add/customize any required fields and values
-2. Implement InitiAllApplications.xaml and CloseAllApplicatoins.xaml workflows, linking them in the Config.xlsx fields
-3. Implement GetTransactionData.xaml and SetTransactionStatus.xaml according to the transaction type being used (Orchestrator queues by default)
-4. Implement Process.xaml workflow and invoke other workflows related to the process being automated
+- **Open ACME System 1 Web Application:** Launches the ACME System 1 web application.
+- **Login to System 1:** Logs into System 1 with the provided email and password.
+- **Access Dashboard:** Navigates to the dashboard, where the user can select a specific menu item.
+- **Access Work Items Listing:** Retrieves all available tasks to be performed and outputs the work items.
+- **Process WI5 Activities:**
+  - **Open Details Page:** Opens the details page of each WI5 activity to retrieve client details.
+  - **SHA1 Hash Generation:** Opens a SHA1 generator webpage and provides input (ClientID and ClientCountry) to generate the client's security hash.
+  - **Retrieve Security Hash:** Retrieves the client security hash value from the webpage.
+  - **Update Work Item:** Updates the status of the work item to "Completed" and adds a comment with the obtained security hash.
+  - **Continue with Next WI5 Activity:** Proceeds to process the next WI5 activity until all are completed.
